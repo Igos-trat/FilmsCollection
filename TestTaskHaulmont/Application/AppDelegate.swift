@@ -1,9 +1,3 @@
-//
-//  AppDelegate.swift
-//  TestTaskHaulmont
-//
-//  Created by Игорь Ущин on 10.08.2022.
-//
 
 import UIKit
 import CoreData
