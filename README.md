@@ -27,7 +27,7 @@
 ## Главный экран
 
 
-$~~~~~~~~~~~~~~~~~~~~~$![Simulator Screen Shot - iPhone 13 Pro Max - 2022-08-15 at 20 01 28](https://user-images.githubusercontent.com/100344157/185918501-fdec9972-2f5a-426c-b4c6-dcdc95fc7a21.png)$~~~$
+$~~~~~~~~~~~~~~~~~~~~~~~~$![Simulator Screen Shot - iPhone 13 Pro Max - 2022-08-15 at 20 01 28](https://user-images.githubusercontent.com/100344157/185918501-fdec9972-2f5a-426c-b4c6-dcdc95fc7a21.png)
 ![Simulator Screen Shot - iPhone 13 Pro Max - 2022-08-15 at 20 01 46](https://user-images.githubusercontent.com/100344157/185918527-63ce2ffb-1317-4a95-a6d1-6319064de376.png)
 $~~~~~~~~~~~~$![Simulator Screen Shot - iPhone 13 Pro Max - 2022-08-22 at 16 16 50](https://user-images.githubusercontent.com/100344157/185919718-b7a42a33-fb70-410d-b1fb-a03a56630f09.png)
 
