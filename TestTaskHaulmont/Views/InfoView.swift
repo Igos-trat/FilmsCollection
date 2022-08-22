@@ -5,7 +5,7 @@ class InfoView: UIView {
     
     // MARK: - Properties
     private var urlString: String = ""
-    private var networking = requestFromTMDb()
+    private var networking = NetworkRequest()
     
      lazy var exitButton: UIButton = {
         let button = UIButton()
@@ -25,7 +25,6 @@ class InfoView: UIView {
     
     let imageView: UIImageView = {
         let iv = UIImageView()
-        iv.backgroundColor = .black
         return iv
     }()
     
@@ -121,6 +120,34 @@ class InfoView: UIView {
             }
         }
     }
+    
+    //MARK: - setup into cell from core data
+    func setupOnCellFromCoreData(_ result: FilmsEntity) {
+        updateCD(title: result.title, rate: "\(result.rate)", overview: result.overview, release: result.year, backdrop: result.backdropImage)
+    }
+    
+    func updateCD(title: String?, rate: String?, overview: String?, release: String?, backdrop: String?) {
+        self.releaseIndexLabel.text = release
+        self.titleFilmLabel.text = title
+        self.rateIndexLabel.text =  rate
+        self.overviewLabel.text =  overview
+        
+        guard let backdropString = backdrop else {return}
+        urlString = "https://image.tmdb.org/t/p/w300" + backdropString
+
+        guard let backdropImageURL = URL(string: urlString) else {
+            self.imageView.image = UIImage(named: "noImageAvailable")
+            return
+        }
+        self.imageView.image = nil
+        networking.fetchImage(url: backdropImageURL) { [weak self] (data: Data) in
+            if let image = UIImage(data: data) {
+                self?.imageView.image = image
+            } else {
+                self?.imageView.image = UIImage(named: "noImageAvailable")
+            }
+        }
+    }
 
     // MARK: - setStackViews
      func setupStack() {
@@ -158,7 +185,7 @@ class InfoView: UIView {
         titleFilmLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         
         addSubview(imageView)
-        imageView.anchor(top: topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 85, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 400, height: 225)
+        imageView.anchor(top: topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 85, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 400, height: 225) 
         
         addSubview(stackView)
         stackView.topAnchor.constraint(equalTo: topAnchor,constant: 330).isActive = true

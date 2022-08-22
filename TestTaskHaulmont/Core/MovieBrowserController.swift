@@ -33,32 +33,34 @@ class MovieBrowserController: UICollectionViewController{
         return view
     }()
     
-    let networking = requestFromTMDb()
-    var results: MoviesData!
-    
+    private var results  = [Movie]()
     
     // MARK: - Init
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        jsonRequest()
+        fetchFromTMbd()
         configureViewComponents()
         configurateNavBar()
     }
 
     // MARK: - API
-    private func jsonRequest() {
-     networking.jsonRequest { [weak self] result in
-          switch result {
-          case .success(let re):
-              self?.results = re
-              self?.collectionView.reloadData()
-          case .failure(let error):
-              print(error.localizedDescription)
-          }
-      }
-}
+    private func fetchFromTMbd() {
+    let urlString = "\(Constants.baseURL)/3/movie/popular?api_key=\(Constants.apiKEY)&language=en-US&page=1"
+    FetchData.shared.fetchStatistic(urlString: urlString) { [weak self] userModel, error in
+        if error == nil {
 
+            guard let userModel = userModel else { return }
+
+            self?.results = userModel.movies
+            print(self?.results ?? "")
+            self?.collectionView.reloadData()
+        } else {
+            print(error!.localizedDescription)
+        }
+    }
+}
+    
     //MARK: - Configurate NavigationBar
     private func configurateNavBar() {
         collectionView.backgroundColor = .background()
@@ -113,6 +115,17 @@ class MovieBrowserController: UICollectionViewController{
             self.infoView.transform = .identity
         }
     }
+    //MARK: - downloadToLibrary
+    private func downloadToLib(indexPath: IndexPath) {
+        PersistenceManager.shared.downloadToLibrary(model: results[indexPath.row]) { result in
+            switch result {
+            case .success():
+                NotificationCenter.default.post(name: NSNotification.Name("add to library"), object: nil)
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
     
     //MARK: - Dismiss InfoView
     private func dismissInfoView() {
@@ -143,23 +156,36 @@ class MovieBrowserController: UICollectionViewController{
 // MARK: - UICollectionViewDataSource/Delegate
 extension MovieBrowserController {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return results?.movies.count ?? 0
+        return results.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CollectionViewCell.reuseId, for: indexPath) as! CollectionViewCell
-        let results = results?.movies[indexPath.row]
-        cell.setupOnCell(results!)
+        let results = results[indexPath.row]
+        cell.setupOnCell(results)
         cell.backgroundColor = .buttonB()
         return cell
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         setInfoView()
-        let results = results.movies[indexPath.row]
+        let results = results[indexPath.row]
         infoView.setupOnCell(results)
     }
-}
+    
+    override func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        let config = UIContextMenuConfiguration(
+            identifier: nil,
+            previewProvider: nil) {[weak self] _ in
+                let download = UIAction(title: "Add to library", image: UIImage(named: "folder.badge.plus"))
+                { _ in
+                    self?.downloadToLib(indexPath: indexPath)
+                }
+                return UIMenu(title: "", image: nil, identifier: nil, options: .displayInline, children: [download])
+            }
+        return config
+        }
+    }
 
 // MARK: - UICollectionViewDelegateFlowLayout
 extension MovieBrowserController: UICollectionViewDelegateFlowLayout {

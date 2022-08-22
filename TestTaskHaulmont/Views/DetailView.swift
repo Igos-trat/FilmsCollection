@@ -5,7 +5,7 @@ class DetailView: UIViewController {
     
     
     private var urlString: String = ""
-    private var networking = requestFromTMDb()
+    private var networking = NetworkRequest()
     
     let titlesPosterImage: UIImageView = {
        let imageView = UIImageView(image: UIImage(named: "noImageAvailable"))
@@ -59,7 +59,6 @@ class DetailView: UIViewController {
         return poster
     }()
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -109,7 +108,7 @@ class DetailView: UIViewController {
             }
         }
     }
-    
+
     //MARK: - Configurate NavigationBar
    private func configurateNavBar() {
     view.backgroundColor = .background()

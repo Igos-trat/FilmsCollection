@@ -5,7 +5,7 @@ class TableViewCell: UITableViewCell {
 
     static let identifire =  "TableViewCell"
     private var urlString: String = ""
-    private var networking = requestFromTMDb()
+    private var networking = NetworkRequest()
   
      let titleLabel: UILabel = {
         let label = UILabel(text: "", font: .systemFont(ofSize: 15, weight: .bold), color: .title())

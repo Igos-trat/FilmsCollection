@@ -38,6 +38,13 @@ class SearchMovieViewController: UIViewController {
                                                             style: .plain,
                                                             target: self,
                                                             action: #selector(goBackButtonTap))
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image:
+                                                            UIImage(named: "folder.fill"),
+                                                            style: .plain,
+                                                            target: self,
+                                                            action: #selector(goToLibrary))
+        
     }
     //MARK: - API
     private func fetchFromTMbd(query: String) {
@@ -61,6 +68,11 @@ class SearchMovieViewController: UIViewController {
       self.navigationController?.popViewController(animated: true)
     }
     
+    @objc func goToLibrary() {
+      let libraryVC = MovieLibrary()
+      self.navigationController?.pushViewController(libraryVC, animated: true)
+    }
+    
     //MARK: - configurate SearchBar
     private func setupSearhcBar() {
        navigationItem.hidesSearchBarWhenScrolling = false
@@ -69,6 +81,18 @@ class SearchMovieViewController: UIViewController {
        searchController.obscuresBackgroundDuringPresentation = false
        searchController.searchBar.placeholder = "Search Movie"
        searchController.searchBar.resignFirstResponder()
+    }
+    
+    //MARK: - downloadToLibrary 
+    private func downloadToLib(indexPath: IndexPath) {
+        PersistenceManager.shared.downloadToLibrary(model: results[indexPath.row]) { result in
+            switch result {
+            case .success():
+                NotificationCenter.default.post(name: NSNotification.Name("add to library"), object: nil)
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
     }
     
     //MARK: - setup constraints TableView
@@ -121,5 +145,19 @@ extension SearchMovieViewController: UITableViewDelegate, UITableViewDataSource 
         detailVc.setupOnCell(result)
         navigationController?.pushViewController(detailVc, animated: true)
     }
+    
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        
+        let config = UIContextMenuConfiguration(
+            identifier: nil,
+            previewProvider: nil) {[weak self] _ in
+                let download = UIAction(title: "Add to library", image: UIImage(named: "folder.badge.plus"))
+                { _ in
+                    self?.downloadToLib(indexPath: indexPath)
+                }
+                return UIMenu(title: "", image: nil, identifier: nil, options: .displayInline, children: [download])
+            }
+        return config
+   }
 }
 
