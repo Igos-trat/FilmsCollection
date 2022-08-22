@@ -31,9 +31,9 @@ class TableViewCell: UITableViewCell {
     let overviewLabel: UILabel = {
         let label = UILabel(text: "", font: .systemFont(ofSize: 13, weight: .medium), color: .text())
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 10
+        label.numberOfLines = 5
         label.textAlignment = .left
-        label.layer.masksToBounds = true
+        label.lineBreakMode = .byWordWrapping
         label.adjustsFontForContentSizeCategory = true
        return label
     }()
