@@ -13,7 +13,7 @@ class MovieLibrary: UIViewController {
         collection.translatesAutoresizingMaskIntoConstraints = false
         return collection
     }()
-    //MARK: - this
+    
     let infoView: InfoView = {
         let view = InfoView()
         view.layer.cornerRadius = 5
@@ -163,7 +163,7 @@ extension MovieLibrary: UICollectionViewDelegate, UICollectionViewDataSource {
         return cell
     }
     
-    // MARK: - this
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         setInfoView()
         let results = results[indexPath.row]
