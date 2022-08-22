@@ -31,9 +31,10 @@
 ![Simulator Screen Shot - iPhone 13 Pro Max - 2022-08-22 at 16 16 50](https://user-images.githubusercontent.com/100344157/185919718-b7a42a33-fb70-410d-b1fb-a03a56630f09.png)
 
 ## Экран поиска фильмов
-![Simulator Screen Shot - iPhone 13 Pro Max - 2022-08-15 at 20 02 29](https://user-images.githubusercontent.com/100344157/185918611-0dea9b27-829c-41aa-b945-d427b33ab0a4.png)
+![Simulator Screen Shot - iPhone 13 Pro Max - 2022-08-22 at 17 30 46](https://user-images.githubusercontent.com/100344157/185933299-86ece3cb-4f06-496c-bd67-ee3e043e3dc8.png)
 ![Simulator Screen Shot - iPhone 13 Pro Max - 2022-08-15 at 20 02 42](https://user-images.githubusercontent.com/100344157/185918629-9dc6e4c3-76e8-49b2-89b6-c0ad12a64901.png)
-![Simulator Screen Shot - iPhone 13 Pro Max - 2022-08-22 at 16 18 01](https://user-images.githubusercontent.com/100344157/185919747-cfc0b49a-bc23-4ad1-ae76-ae0f8424c61a.png)
+![Simulator Screen Shot - iPhone 13 Pro Max - 2022-08-22 at 17 32 35](https://user-images.githubusercontent.com/100344157/185933566-05a3a4f9-30c7-440a-a628-9e26febf57c1.png)
+
 
 ## Экран собственной коллекции фильмов
 ![Simulator Screen Shot - iPhone 13 Pro Max - 2022-08-22 at 16 18 17](https://user-images.githubusercontent.com/100344157/185919677-eaf75a87-a525-413a-bc3f-44098314b926.png)
