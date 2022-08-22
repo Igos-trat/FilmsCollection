@@ -38,5 +38,5 @@
 ![Simulator Screen Shot - iPhone 13 Pro Max - 2022-08-22 at 16 18 31](https://user-images.githubusercontent.com/100344157/185919693-76b6f810-bfc1-410c-aff3-5eb35c413f4e.png)
 ![Simulator Screen Shot - iPhone 13 Pro Max - 2022-08-22 at 16 18 49](https://user-images.githubusercontent.com/100344157/185919701-4a5c0b37-dd09-488e-9d3f-738f2bd20fff.png)
 
-## Дополнительные экраны
+## Экран разработчика
 ![Simulator Screen Shot - iPhone 13 Pro Max - 2022-08-15 at 20 01 59](https://user-images.githubusercontent.com/100344157/185918668-4540baaa-3a8a-4fb3-bde3-21ce43184428.png)
