@@ -1,4 +1,4 @@
-# TestTaskHaulmont
+# FavoriteMovies
 
 # Реализовано
 - Метаинформация и обложки загружаются через внешний сервис (http://www.themoviedb.org)
