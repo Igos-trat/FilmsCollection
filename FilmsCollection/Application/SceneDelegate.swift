@@ -13,7 +13,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let nav = UINavigationController(rootViewController: ChooseController())
         let window  = UIWindow(windowScene: windowScene)
         window.makeKeyAndVisible()
-        window.rootViewController =  nav //ContainerViewController()
+        window.rootViewController =  nav 
         self.window = window
         self.window?.tintColor = .title
     }
