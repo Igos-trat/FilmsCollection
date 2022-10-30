@@ -44,4 +44,6 @@
 ![Simulator Screen Shot - iPhone 13 Pro Max - 2022-08-22 at 16 18 49](https://user-images.githubusercontent.com/100344157/185919701-4a5c0b37-dd09-488e-9d3f-738f2bd20fff.png)
 
 ## Меню боковой панели
-![Simulator Screen Shot - iPhone 13 Pro Max - 2022-08-15 at 20 01 59](https://user-images.githubusercontent.com/100344157/185918668-4540baaa-3a8a-4fb3-bde3-21ce43184428.png)
+![Simulator Screen Shot - iPhone 13 Pro Max - 2022-10-30 at 20 44 39](https://user-images.githubusercontent.com/100344157/198891187-f324e84b-5bc1-4aef-9f55-8217ef7a8104.png)
+![Simulator Screen Shot - iPhone 13 Pro Max - 2022-10-30 at 20 54 10](https://user-images.githubusercontent.com/100344157/198891129-1e725580-4b9b-409a-a5fe-d0fbb4ce1aac.png)
+
