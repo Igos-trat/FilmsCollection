@@ -3,40 +3,101 @@ workflows:
     name: iOS Release to TestFlight
     instance_type: mac_mini_m2
     environment:
-      groups:
-        - admin # Группа для хранения секретов API
       vars:
-        XCODE_PROJECT: "FilmsCollection.xcodeproj" # Укажите имя вашего .xcodeproj файла
-        XCODE_SCHEME: "FilmsCollection" # Укажите название схемы проекта
-        BUNDLE_ID: "com.PhlpJiseph.Films" # Укажите ваш Bundle ID
-        APP_STORE_APPLE_ID: "6752660686" # Укажите Apple ID приложения из App Store Connect
+        XCODE_PROJECT: "FilmsCollection.xcodeproj"
+        XCODE_SCHEME: "FilmsCollection"
+        BUNDLE_ID: "com.PhlpJiseph.Films"
+        APP_STORE_APPLE_ID: "123456789" # ЗАМЕНИТЕ на реальный ID
+        APP_STORE_CONNECT_ISSUER_ID: "76f522ce-5da9-4149-b26e-3ae60fc2a824"
+        APP_STORE_CONNECT_KEY_ID: "WBP2ND8WH6"
+        APP_STORE_CONNECT_PRIVATE_KEY: "-----BEGIN PRIVATE KEY-----
+MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgK1Cgd7kcYlr03SDg
+gSIdf++kFAk0GS67WNiVutpT3h6gCgYIKoZIzj0DAQehRANCAAS+QTxZxRTRFdg6
+XpqYdgBbQXKAWNg+LrEIN+lyfc92v57Gntj8yY6gfucGjHwA7+A3iTwgGdE5tMpa
+JuqhiQWD
+-----END PRIVATE KEY-----"
+        TEAM_ID: "Y4JKCJ5SG3" # ЗАМЕНИТЕ на ваш Team ID
       xcode: latest
     triggering:
       events:
         - push
-        - tag
       branch_patterns:
         - pattern: 'release'
           include: true
           source: true
     scripts:
-      - name: Set up code signing
+      - name: Setup manual code signing
         script: |
-          xcode-project use-profiles
-      - name: Increment build number
+          # Устанавливаем правильный Bundle ID в Info.plist
+          /usr/libexec/PlistBuddy -c "Set :CFBundleIdentifier $BUNDLE_ID" "ios/FilmsCollection/Info.plist"
+          
+          # Создаем exportOptions.plist для App Store
+          cat > exportOptions.plist << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>compileBitcode</key>
+              <true/>
+              <key>method</key>
+              <string>app-store</string>
+              <key>teamID</key>
+              <string>$TEAM_ID</string>
+              <key>uploadBitcode</key>
+              <true/>
+              <key>uploadSymbols</key>
+              <true/>
+          </dict>
+          </plist>
+          EOF
+
+      - name: Build and archive
         script: |
-          LATEST_BUILD_NUMBER=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID")
-          NEW_BUILD_NUMBER=$(($LATEST_BUILD_NUMBER + 1))
-          echo "Incrementing build number from $LATEST_BUILD_NUMBER to $NEW_BUILD_NUMBER"
-          agvtool new-version -all $NEW_BUILD_NUMBER
-      - name: Build IPA for distribution
+          # Очищаем предыдущие сборки
+          xcodebuild clean -project "$XCODE_PROJECT" -scheme "$XCODE_SCHEME"
+          
+          # Создаем архив с явными настройками подписи
+          xcodebuild archive \
+            -project "$XCODE_PROJECT" \
+            -scheme "$XCODE_SCHEME" \
+            -archivePath build/ios/xcarchive/FilmsCollection.xcarchive \
+            -configuration Release \
+            CODE_SIGN_STYLE="Manual" \
+            PROVISIONING_PROFILE_SPECIFIER="" \
+            DEVELOPMENT_TEAM="$TEAM_ID" \
+            CODE_SIGN_IDENTITY="Apple Distribution" \
+            PRODUCT_BUNDLE_IDENTIFIER="$BUNDLE_ID"
+            
+          # Проверяем что архив создан
+          if [ -d "build/ios/xcarchive/FilmsCollection.xcarchive" ]; then
+            echo "✅ Archive created successfully"
+          else
+            echo "❌ Archive creation failed"
+            exit 1
+          fi
+
+      - name: Export IPA
         script: |
-          xcode-project build-ipa \
-            --project "$XCODE_PROJECT" \
-            --scheme "$XCODE_SCHEME"
+          # Экспортируем IPA файл
+          xcodebuild -exportArchive \
+            -archivePath build/ios/xcarchive/FilmsCollection.xcarchive \
+            -exportOptionsPlist exportOptions.plist \
+            -exportPath build/ios/ipa \
+            -allowProvisioningUpdates
+          
+          # Проверяем что IPA создан
+          if [ -f "build/ios/ipa/$XCODE_SCHEME.ipa" ]; then
+            echo "✅ IPA created successfully"
+            ls -la build/ios/ipa/
+          else
+            echo "❌ IPA creation failed"
+            ls -la build/ios/ipa/ || true
+            exit 1
+          fi
+
     artifacts:
       - build/ios/ipa/*.ipa
-      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+      - build/ios/xcarchive/*.xcarchive
     publishing:
       app_store_connect:
         api_key: $APP_STORE_CONNECT_PRIVATE_KEY
@@ -47,13 +108,7 @@ workflows:
         submit_to_app_store: false
       email:
         recipients:
-          - user1@example.com
+          - your-email@example.com
         notify:
           success: true
           failure: true
-      slack:
-        channel: '#builds'
-        notify_on_build_start: true
-        notify:
-          success: false
-          failure: false
