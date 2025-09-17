@@ -3,6 +3,9 @@ workflows:
     name: iOS Release to TestFlight
     instance_type: mac_mini_m2
     environment:
+    ios_signing:
+        distribution_type: app_store
+        bundle_identifier: "com.PhlpJiseph.Films"
       groups:
         - admin # Группа для хранения секретов API
       vars:
@@ -23,6 +26,9 @@ workflows:
           include: true
           source: true
     scripts:
+     - name: Auto code signing
+        script: |
+          xcode-project use-profiles
       - name: Set up code signing
         script: |
           xcode-project use-profiles
