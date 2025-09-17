@@ -7,7 +7,7 @@ workflows:
         - admin # Группа для хранения секретов API
       vars:
         XCODE_PROJECT: "FilmsCollection.xcodeproj" # Укажите имя вашего .xcodeproj файла
-        XCODE_SCHEME: "Runner" # Укажите название схемы проекта
+        XCODE_SCHEME: "FilmsCollection" # Укажите название схемы проекта
         BUNDLE_ID: "com.PhlpJiseph.Films" # Укажите ваш Bundle ID
         APP_STORE_APPLE_ID: "6752660686" # Укажите Apple ID приложения из App Store Connect
       xcode: latest
