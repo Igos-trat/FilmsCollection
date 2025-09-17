@@ -10,6 +10,9 @@ workflows:
         XCODE_SCHEME: "FilmsCollection" # Укажите название схемы проекта
         BUNDLE_ID: "com.PhlpJiseph.Films" # Укажите ваш Bundle ID
         APP_STORE_APPLE_ID: "6752660686" # Укажите Apple ID приложения из App Store Connect
+        APP_STORE_CONNECT_ISSUER_ID: "76f522ce-5da9-4149-b26e-3ae60fc2a824"
+        APP_STORE_CONNECT_KEY_ID: "45SXN2G832"
+        APP_STORE_CONNECT_PRIVATE_KEY: "-----BEGIN PRIVATE KEY-----\nMIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgBL70dmknn7qdOcLJ\ntZ2XQokLp8fgZ+1XBqXY5HhmUSKgCgYIKoZIzj0DAQehRANCAASFhe0iE2uaTx25\nyRlZWn/APrM13RdydslxnTmdzhcFZVSehMYwTVxiiEjIl48vAgwUabVBgklr7z8I\nmldw6ifF\n-----END PRIVATE KEY-----"
       xcode: latest
     triggering:
       events:
