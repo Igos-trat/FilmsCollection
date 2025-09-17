@@ -26,7 +26,7 @@ workflows:
           include: true
           source: true
     scripts:
-     - name: Auto code signing
+       - name: Auto code signing
         script: |
           xcode-project use-profiles
       - name: Set up code signing
