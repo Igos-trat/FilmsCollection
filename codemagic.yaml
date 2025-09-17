@@ -4,7 +4,7 @@ workflows:
     instance_type: mac_mini_m2
     environment:
       groups:
-        - app_store_connect_credentials # Группа для хранения секретов API
+        - admin # Группа для хранения секретов API
       vars:
         XCODE_PROJECT: "FilmsCollection.xcodeproj" # Укажите имя вашего .xcodeproj файла
         XCODE_SCHEME: "Runner" # Укажите название схемы проекта
