@@ -1,58 +1,59 @@
 workflows:
- ios-workflow:
-   instance_type: mac_mini_m2
-   name: iOS Workflow
-   integrations:
-     app_store_connect: "[ЗДЕСЬ Я МЕНЯЮ имя подключения App Store]"
-   environment:
-     ios_signing:
-       distribution_type: app_store
-       bundle_identifier: "[ЗДЕСЬ Я МЕНЯЮ Bundle ID]"
-     vars:
-       XCODE_PROJECT: "[ЗДЕСЬ Я МЕНЯЮ имя проекта .xcodeproj]"
-       XCODE_SCHEME: "[ЗДЕСЬ Я МЕНЯЮ название схемы проекта]"
-       APP_STORE_APPLE_ID: "[ЗДЕСЬ Я МЕНЯЮ Apple ID приложения]"
-     xcode: latest
-   triggering:
-     events:
-       - push
-       - tag
-       - pull_request
-     branch_patterns:
-       - pattern: 'release'
-         include: true
-         source: true
-   scripts:
-     - name: Set up code signing settings on Xcode project
-       script: |
-         xcode-project use-profiles
-     - name: Increment build number
-       script: |
-         agvtool new-version -all $(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID") + 1))
-     - name: Build ipa for distribution
-       script: |
-         xcode-project build-ipa --project "$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
-   artifacts:
-     - build/ios/ipa/*.ipa
-     - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
-   publishing:
-     app_store_connect:
-       auth: integration
-       submit_to_testflight: true
-       expire_build_submitted_for_review: false
-       beta_groups:
-         - group name 1
-         - group name 2
-       submit_to_app_store: false
-     email:
-       recipients:
-         - user1@example.com
-       notify:
-         success: true
-         failure: true
-     slack:
-       channel: '#builds'
-       notify_on_build_start: true
-       notify:
-         success: false
-         failure: false
+  ios-release-workflow:
+    name: iOS Release to TestFlight
+    instance_type: mac_mini_m2
+    environment:
+      groups:
+        - app_store_connect_credentials # Группа для хранения секретов API
+      vars:
+        XCODE_PROJECT: "FilmsCollection.xcodeproj" # Укажите имя вашего .xcodeproj файла
+        XCODE_SCHEME: "Runner" # Укажите название схемы проекта
+        BUNDLE_ID: "com.PhlpJiseph.Films" # Укажите ваш Bundle ID
+        APP_STORE_APPLE_ID: "6752660686" # Укажите Apple ID приложения из App Store Connect
+      xcode: latest
+    triggering:
+      events:
+        - push
+        - tag
+      branch_patterns:
+        - pattern: 'release'
+          include: true
+          source: true
+    scripts:
+      - name: Set up code signing
+        script: |
+          xcode-project use-profiles
+      - name: Increment build number
+        script: |
+          LATEST_BUILD_NUMBER=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID")
+          NEW_BUILD_NUMBER=$(($LATEST_BUILD_NUMBER + 1))
+          echo "Incrementing build number from $LATEST_BUILD_NUMBER to $NEW_BUILD_NUMBER"
+          agvtool new-version -all $NEW_BUILD_NUMBER
+      - name: Build IPA for distribution
+        script: |
+          xcode-project build-ipa \
+            --project "$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+    publishing:
+      app_store_connect:
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_ID
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        submit_to_testflight: true
+        expire_build_submitted_for_review: false
+        submit_to_app_store: false
+      email:
+        recipients:
+          - user1@example.com
+        notify:
+          success: true
+          failure: true
+      slack:
+        channel: '#builds'
+        notify_on_build_start: true
+        notify:
+          success: false
+          failure: false
